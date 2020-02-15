@@ -8,7 +8,6 @@
 #define SEARCH_WINDOW_H
 
 #include <utility>
-#include <opencv2/core/core.hpp>
 #include "BDM.h"
 #include "Point2D.h"
 
@@ -33,4 +32,3 @@ class SearchWindow {
 };
 
 #endif
-

@@ -1,6 +1,4 @@
 #include "Block.h"
-using namespace std;
-using namespace cv;
 
 Block::Block() {
 	size = 0;
@@ -45,4 +43,3 @@ int Block::getSize() const {
 SearchWindow Block::getWindow() const {
 	return window;
 }
-

@@ -1,6 +1,5 @@
 #include "BlockMatching.h"
 using namespace std;
-using namespace cv;
 
 BlockMatching::BlockMatching() {
 	blockID = -1;
@@ -66,7 +65,7 @@ Block BlockMatching::buildBlock(int x, int y, int displacement, int blockSize, i
 	return block;
 }
 
-Node BlockMatching::buildNode(int x, int y, int displacement, int blockSize, int width, int height, const Mat& edgeMap) {
+Node BlockMatching::buildNode(int x, int y, int displacement, int blockSize, int width, int height, const cv::Mat& edgeMap) {
 	Block block = buildBlock(x, y, displacement, blockSize, width, height);
 	
 	int count = 0;
@@ -80,7 +79,7 @@ Node BlockMatching::buildNode(int x, int y, int displacement, int blockSize, int
 	return node;
 }
 
-Tuple BlockMatching::fs(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::fs(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	int searchPoints = 0, blockSize = block.getSize();
 	double minDistortion = DBL_MAX, distortion = 0.0;
 	
@@ -107,7 +106,7 @@ Tuple BlockMatching::fs(const Block& block, const Mat& currentFrame, const Mat& 
 	return t;
 }
 
-Tuple BlockMatching::tss(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::tss(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, blockSize = block.getSize();
@@ -148,7 +147,7 @@ Tuple BlockMatching::tss(const Block& block, const Mat& currentFrame, const Mat&
 	return t;
 }
 
-Tuple BlockMatching::fss(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::fss(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, step = 2, blockSize = block.getSize();
@@ -199,7 +198,7 @@ Tuple BlockMatching::fss(const Block& block, const Mat& currentFrame, const Mat&
 	return t;
 }
 
-Tuple BlockMatching::ds(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::ds(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, step = 2, blockSize = block.getSize();
@@ -257,7 +256,7 @@ Tuple BlockMatching::ds(const Block& block, const Mat& currentFrame, const Mat& 
 	return t;
 }
 
-Tuple BlockMatching::hexbs(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::hexbs(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, step = 2, blockSize = block.getSize();
@@ -369,7 +368,7 @@ Tuple BlockMatching::mdgds(const Block& block, const cv::Mat& currentFrame, cons
 	return t;
 }
 
-Tuple BlockMatching::fdgds(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::fdgds(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int improvements = 0, searchPoints = 1, blockSize = block.getSize();
@@ -428,7 +427,7 @@ Tuple BlockMatching::fdgds(const Block& block, const Mat& currentFrame, const Ma
 	return t;
 }
 
-Tuple BlockMatching::arps(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::arps(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, blockSize = block.getSize(), patternSize = 2, improvements = 0;
@@ -511,7 +510,7 @@ Tuple BlockMatching::arps(const Block& block, const Mat& currentFrame, const Mat
 	return t;
 }
 
-Tuple BlockMatching::tbs(const Block& block, const Mat& currentFrame, const Mat& referenceFrame) {
+Tuple BlockMatching::tbs(const Block& block, const cv::Mat& currentFrame, const cv::Mat& referenceFrame) {
 	blockID++;
 
 	int searchPoints = 1, step = 2, blockSize = block.getSize();
@@ -643,7 +642,7 @@ Tuple BlockMatching::tbs(const Block& block, const Mat& currentFrame, const Mat&
 	return t;
 }
 
-void BlockMatching::fixedBsSearch(const Mat& currentFrame, const Mat& referenceFrame, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const Mat&, const Mat&)) {
+void BlockMatching::fixedBsSearch(const cv::Mat& currentFrame, const cv::Mat& referenceFrame, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const cv::Mat&, const cv::Mat&)) {
 	int width = currentFrame.cols;
 	int height = currentFrame.rows;
 
@@ -765,7 +764,7 @@ void BlockMatching::fixedBsSearch(const Mat& currentFrame, const Mat& referenceF
 	}
 }
 
-void BlockMatching::bfs(const Mat& currentFrame, const Mat& referenceFrame, const Mat& edgeMap, int x, int y, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const Mat&, const Mat&)) {
+void BlockMatching::bfs(const cv::Mat& currentFrame, const cv::Mat& referenceFrame, const cv::Mat& edgeMap, int x, int y, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const cv::Mat&, const cv::Mat&)) {
 	Node root = buildNode(x, y, displacement, blockSize, currentFrame.cols, currentFrame.rows, edgeMap);
 	queue<Node> q;
 	q.push(root);
@@ -800,9 +799,9 @@ void BlockMatching::bfs(const Mat& currentFrame, const Mat& referenceFrame, cons
 	}
 }
 
-void BlockMatching::variableBsSearch(const Mat& currentFrame, const Mat& referenceFrame, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const Mat&, const Mat&)) {
-	Mat difImg = abs(currentFrame - referenceFrame);
-	Mat edgeMap = Edges::sobel(difImg);
+void BlockMatching::variableBsSearch(const cv::Mat& currentFrame, const cv::Mat& referenceFrame, int displacement, int blockSize, Tuple(BlockMatching::*algorithm)(const Block&, const cv::Mat&, const cv::Mat&)) {
+	cv::Mat difImg = abs(currentFrame - referenceFrame);
+	cv::Mat edgeMap = Edges::sobel(difImg);
 
 	int width = currentFrame.cols;
 	int height = currentFrame.rows;
@@ -893,7 +892,7 @@ void BlockMatching::variableBsSearch(const Mat& currentFrame, const Mat& referen
 	}
 }
 
-vector<Tuple> BlockMatching::estimateMotion(const Mat& currentFrame, const Mat& referenceFrame, int displacement, int blockSize, int blockType, Tuple(BlockMatching::*algorithm)(const Block&, const Mat&, const Mat&)) {
+vector<Tuple> BlockMatching::estimateMotion(const cv::Mat& currentFrame, const cv::Mat& referenceFrame, int displacement, int blockSize, int blockType, Tuple(BlockMatching::*algorithm)(const Block&, const cv::Mat&, const cv::Mat&)) {
 	output.clear();
 
 	if(blockType == NO_VARIABLE_BLOCK)
@@ -904,8 +903,8 @@ vector<Tuple> BlockMatching::estimateMotion(const Mat& currentFrame, const Mat& 
 	return output;
 }
 
-Mat BlockMatching::compensation(const Mat& referenceFrame, const vector<Tuple>& tuples) {
-	Mat compensatedFrame(referenceFrame.rows, referenceFrame.cols, CV_8UC1);
+cv::Mat BlockMatching::compensation(const cv::Mat& referenceFrame, const vector<Tuple>& tuples) {
+	cv::Mat compensatedFrame(referenceFrame.rows, referenceFrame.cols, CV_8UC1);
 	
 	for( unsigned int i = 0 ; i < tuples.size() ; i++ ) {
 		Block block = tuples[i].getBlock();
@@ -921,26 +920,26 @@ Mat BlockMatching::compensation(const Mat& referenceFrame, const vector<Tuple>& 
 	return compensatedFrame;
 }
 
-Mat BlockMatching::drawBlocks(const Mat& image, const vector<Tuple>& tuples) {
-	Mat blocksFrame;
-	cvtColor(image, blocksFrame, CV_GRAY2RGB);
+cv::Mat BlockMatching::drawBlocks(const cv::Mat& image, const vector<Tuple>& tuples) {
+	cv::Mat blocksFrame;
+	cvtColor(image, blocksFrame, cv::COLOR_GRAY2RGB);
 
 	for(unsigned int i = 0; i < tuples.size(); i++) {
 		Block block = tuples[i].getBlock();
 		Point2D point = block.getPosition();
 		
 		for(int x = point.getX(); x < point.getX() + block.getSize(); x++) {
-			blocksFrame.at<Vec3b>(point.getY(), x)[1] = 255;
+			blocksFrame.at<cv::Vec3b>(point.getY(), x)[1] = 255;
 			
 			if(point.getY() + block.getSize() < image.rows)
-				blocksFrame.at<Vec3b>(point.getY() + block.getSize(), x)[1] = 255;
+				blocksFrame.at<cv::Vec3b>(point.getY() + block.getSize(), x)[1] = 255;
 		}
 		
 		for(int y = point.getY(); y < point.getY() + block.getSize(); y++) {
-			blocksFrame.at<Vec3b>(y, point.getX())[1] = 255;
+			blocksFrame.at<cv::Vec3b>(y, point.getX())[1] = 255;
 			
 			if(point.getX() + block.getSize() < image.cols)
-				blocksFrame.at<Vec3b>(y, point.getX() + block.getSize())[1] = 255;
+				blocksFrame.at<cv::Vec3b>(y, point.getX() + block.getSize())[1] = 255;
 		}
 	}
 	
@@ -950,4 +949,3 @@ Mat BlockMatching::drawBlocks(const Mat& image, const vector<Tuple>& tuples) {
 void BlockMatching::setThreshold(int threshold) {
 	this->threshold = threshold;
 }
-

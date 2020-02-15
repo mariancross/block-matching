@@ -6,6 +6,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "BDM.h"
@@ -30,16 +31,16 @@ void run(const std::vector<std::string>& entryList, int displacement, int blockS
 	unsigned int it = 1;
 
 	cv::Mat currentFrame, referenceFrame;
-	currentFrame = cv::imread(entryList[it].c_str(), CV_LOAD_IMAGE_GRAYSCALE); 
+	currentFrame = cv::imread(entryList[it].c_str(), cv::ImreadModes::IMREAD_GRAYSCALE); 
 
-	referenceFrame = cv::imread(entryList[it - 1].c_str(), CV_LOAD_IMAGE_GRAYSCALE);
+	referenceFrame = cv::imread(entryList[it - 1].c_str(), cv::ImreadModes::IMREAD_GRAYSCALE);
 
 	BlockMatching bm(currentFrame.cols, currentFrame.rows);
 	
 	do {
 		if(it > 1) {
 			referenceFrame = currentFrame;
-			currentFrame = cv::imread(entryList[it].c_str(), CV_LOAD_IMAGE_GRAYSCALE); 
+			currentFrame = cv::imread(entryList[it].c_str(), cv::ImreadModes::IMREAD_GRAYSCALE); 
 
 			bm.initialiseVars();
 		}
@@ -108,4 +109,3 @@ int main(int argc, char* argv[]) {
 	
 	return 0;
 }
-

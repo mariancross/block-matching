@@ -1,6 +1,5 @@
 #include "SearchWindow.h"
 using namespace std;
-using namespace cv;
 
 SearchWindow::SearchWindow() {
 
@@ -35,4 +34,3 @@ Point2D SearchWindow::getStart() {
 Point2D SearchWindow::getEnd() {
 	return end;
 }
-

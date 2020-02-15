@@ -1,4 +1,4 @@
-# BlockMatching
+# Block Matching
 This is an implementation of  [A comparison of block-matching motion estimation algorithms](https://ieeexplore.ieee.org/document/6398002) paper.
 
 ## Dependencies

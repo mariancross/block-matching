@@ -13,7 +13,9 @@
 #include <queue>
 #include <utility>
 #include <vector>
-#include <opencv2/core/core.hpp>  
+
+#include <opencv2/core/core.hpp>
+
 #include "BDM.h"
 #include "Block.h"
 #include "Edges.h"
